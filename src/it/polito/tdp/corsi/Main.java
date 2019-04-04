@@ -23,6 +23,7 @@ public class Main extends Application {
 			controller.setModel(model);
 			
 			
+			
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();

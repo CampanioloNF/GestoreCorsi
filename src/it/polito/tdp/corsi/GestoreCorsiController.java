@@ -6,6 +6,7 @@ package it.polito.tdp.corsi;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.corsi.model.Corso;
@@ -41,27 +42,49 @@ public class GestoreCorsiController {
     @FXML
     void doCalcolaStatCorsi(ActionEvent event) {
     	
+    	this.txtResult.clear();
+    	
+    	if(controlloPeriodo()) {
+    	
+       Map <Corso, Integer> corsi = this.model.getIscrittiCorsi(Integer.parseInt(txtPeriodo.getText()));
+    	for(Corso c : corsi.keySet()) {
+    		txtResult.appendText(c.toString() +"   Numero iscritti : " +corsi.get(c)+ "\n");
+    	 }
+    	}
+    	return;
+    	
     }
 
-    @FXML
-    void doCercaCorsi(ActionEvent event) {
+    public boolean controlloPeriodo() {
+    	
     	int periodo;
     	try {
     		periodo = Integer.parseInt(txtPeriodo.getText());
     	} catch (NumberFormatException e) {
     		txtResult.appendText("Devi inserire un periodo (1 o 2)");
-    		return;
+    		return false;
     	}
     	if(periodo != 1 && periodo != 2) {
     		txtResult.appendText("Devi inserire un periodo (1 o 2)");
-    		return;
+    		return false;
     	}
     	
-    	List<Corso> corsi = this.model.getCorsiByPeriodo(periodo);
+    	return true;
+    }
+    
+    @FXML
+    void doCercaCorsi(ActionEvent event) {
+    	
+    	this.txtResult.clear();
+    	
+    	if(controlloPeriodo()) {
+    	
+    	List<Corso> corsi = this.model.getCorsiByPeriodo(Integer.parseInt(txtPeriodo.getText()));
     	for(Corso c : corsi) {
     		txtResult.appendText(c.toString() + "\n");
+    	 }
     	}
-    	
+    	return;
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
@@ -71,10 +94,15 @@ public class GestoreCorsiController {
         assert btnCercaCorsi != null : "fx:id=\"btnCercaCorsi\" was not injected: check your FXML file 'GestoreCorsi.fxml'.";
         assert btnStatCorsi != null : "fx:id=\"btnStatCorsi\" was not injected: check your FXML file 'GestoreCorsi.fxml'.";
 
+        
+        
     }
     
     public void setModel(GestoreCorsi model) {
     	this.model = model;
+    	
     }
+    
+    
     
 }
