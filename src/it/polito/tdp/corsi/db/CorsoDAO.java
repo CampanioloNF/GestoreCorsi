@@ -41,7 +41,8 @@ public class CorsoDAO {
 		return result;
 	}
 
-	/*public List<Corso> listCorsiByPD(int periodo) {
+	/*
+	 * public List<Corso> listCorsiByPD(int periodo) {
 		String sql = "SELECT * FROM corso WHERE pd = ?";
 		List<Corso> result = new LinkedList<Corso>();
 		

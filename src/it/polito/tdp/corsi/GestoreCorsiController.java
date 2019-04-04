@@ -6,11 +6,14 @@ package it.polito.tdp.corsi;
 
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
+
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.corsi.model.Corso;
+import it.polito.tdp.corsi.model.EccezioneCorsoInesistente;
 import it.polito.tdp.corsi.model.GestoreCorsi;
+import it.polito.tdp.corsi.model.Studente;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -40,15 +43,70 @@ public class GestoreCorsiController {
     private Button btnStatCorsi; // Value injected by FXMLLoader
 
     @FXML
+    private Button btnStudentiCorso;
+
+    @FXML
+    private Button btnCDS;
+
+    @FXML
+    private TextField txtCorso;
+
+    @FXML
+    void doCalcolaStatCDS(ActionEvent event) {
+
+    	this.txtResult.clear();
+
+    	String codins = this.txtCorso.getText().trim();
+    	
+    	List<Studente> studenti;
+		try {
+			studenti = this.model.elencoStudentiByCDS(codins);
+		} catch (EccezioneCorsoInesistente e) {
+			
+			this.txtResult.setText("ERRORE! Il corso selezionato NON esiste!");
+			return;
+		}
+    	
+    	for(Studente s : studenti) {
+    		this.txtResult.appendText(s.toString() + "\n");
+    	}
+    	
+    }
+
+
+    // mi aspetto tutti gli studenti iscritti a questo corso
+    @FXML
+    void doElencaStudenti(ActionEvent event) {
+
+    	this.txtResult.clear();
+    	
+    	String codins = this.txtCorso.getText().trim();
+    	
+    	List<Studente> studenti;
+		try {
+			studenti = this.model.elencoStudenti(codins);
+		} catch (EccezioneCorsoInesistente e) {
+			
+			this.txtResult.setText("ERRORE! Il corso selezionato NON esiste!");
+			return;
+		}
+    	
+    	for(Studente s : studenti) {
+    		this.txtResult.appendText(s.toString() + "\n");
+    	}
+    	
+    }
+    
+    @FXML
     void doCalcolaStatCorsi(ActionEvent event) {
     	
     	this.txtResult.clear();
     	
     	if(controlloPeriodo()) {
     	
-       Map <Corso, Integer> corsi = this.model.getIscrittiCorsi(Integer.parseInt(txtPeriodo.getText()));
-    	for(Corso c : corsi.keySet()) {
-    		txtResult.appendText(c.toString() +"   Numero iscritti : " +corsi.get(c)+ "\n");
+       
+    	for(Entry<Corso, Integer> entry : this.model.getIscrittiCorsi(Integer.parseInt(txtPeriodo.getText())).entrySet()) {
+    		txtResult.appendText(entry.getKey().toString() +"   Numero iscritti : " +entry.getValue()+ "\n");
     	 }
     	}
     	return;
@@ -93,7 +151,12 @@ public class GestoreCorsiController {
         assert txtPeriodo != null : "fx:id=\"txtPeriodo\" was not injected: check your FXML file 'GestoreCorsi.fxml'.";
         assert btnCercaCorsi != null : "fx:id=\"btnCercaCorsi\" was not injected: check your FXML file 'GestoreCorsi.fxml'.";
         assert btnStatCorsi != null : "fx:id=\"btnStatCorsi\" was not injected: check your FXML file 'GestoreCorsi.fxml'.";
-
+        assert btnStudentiCorso != null : "fx:id=\"btnStudentiCorso\" was not injected: check your FXML file 'GestoreCorsi.fxml'.";
+        assert btnCDS != null : "fx:id=\"btnCDS\" was not injected: check your FXML file 'GestoreCorsi.fxml'.";
+        assert txtCorso != null : "fx:id=\"txtCorso\" was not injected: check your FXML file 'GestoreCorsi.fxml'.";
+         
+        
+        
         
         
     }

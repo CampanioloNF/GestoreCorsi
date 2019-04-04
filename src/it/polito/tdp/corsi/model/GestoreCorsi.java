@@ -4,6 +4,7 @@ import java.util.*;
 
 
 import it.polito.tdp.corsi.db.CorsoDAO;
+import it.polito.tdp.corsi.db.StudenteDAO;
 import it.polito.tdp.corsi.model.Corso;
 
 public class GestoreCorsi {
@@ -11,12 +12,13 @@ public class GestoreCorsi {
 	
 	private Map <String, Corso> mappaCorsi; 
 	private CorsoDAO daoC;
+	private StudenteDAO daoS;
 	
 	public GestoreCorsi() {
 		
 		this.mappaCorsi = new HashMap <String, Corso>();
 		daoC = new CorsoDAO();
-		
+		daoS = new StudenteDAO();
 		//popoliamo la mappaCorsi
 		
 		for(Corso c : daoC.listAll()) {
@@ -84,6 +86,22 @@ public class GestoreCorsi {
  		
 		
 		
+	}
+
+	public List<Studente> elencoStudenti(String codins) throws EccezioneCorsoInesistente {
+	
+		if(!this.mappaCorsi.containsKey(codins))
+		     throw new EccezioneCorsoInesistente();
+		
+		return daoS.elencaStudenti(codins);
+	}
+
+	public List<Studente> elencoStudentiByCDS(String codins) throws EccezioneCorsoInesistente {
+
+		if(!this.mappaCorsi.containsKey(codins))
+		     throw new EccezioneCorsoInesistente();
+		
+		return daoS.elencaStudentiByCDS(codins);
 	}
 
 	
